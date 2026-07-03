@@ -230,7 +230,6 @@ php artisan test
 npm run build
 ```
 
-Run V2 on its dedicated local address so it cannot be confused with the original project:
 
 ```powershell
 php artisan serve --host=127.0.0.1 --port=8090
