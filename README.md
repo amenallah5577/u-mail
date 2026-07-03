@@ -163,7 +163,7 @@ coworkers do not install Ollama and do not connect to port `11434` directly.
 The script creates the coworker package in
 `storage\app\coworker-setup`. Keep that folder together and give it only to
 pilot participants. Send `storage\app\coworker-setup.zip`; each coworker
-extracts the complete ZIP, connects to Wi-Fi `TT_1B88`, double-clicks
+extracts the complete ZIP, connects to Wi-Fi `<your-wifi-ssid>`, double-clicks
 `Install U-Mail Access.cmd`, accepts the administrator prompt, and opens
 `https://u-mail.test/register`. Double-click `Remove U-Mail Access.cmd` after
 the pilot. If installation fails, `Check U-Mail Connection.cmd` reports
@@ -241,10 +241,10 @@ Then open `http://127.0.0.1:8090/login`.
 - Administrators sign in at the configured hidden admin path, `http://127.0.0.1:8090/utica-admin-entry` by default.
 - Each portal only accepts its intended role. Employee sessions cannot access administrator routes or controls.
 
-On this Windows workstation, use Herd PHP 8.4 because the default XAMPP PHP is too old:
+If your default Windows PHP is older than 8.4, run tests with a PHP 8.4 binary explicitly:
 
 ```powershell
-& 'C:\Users\ammou\.config\herd\bin\php84\php.exe' artisan test
+& '<path-to-php-8.4>\php.exe' artisan test
 ```
 
 ## Security Notes
