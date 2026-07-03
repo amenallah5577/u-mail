@@ -1,0 +1,44 @@
+{
+	admin off
+	auto_https disable_redirects
+	servers {
+		protocols h1 h2
+	}
+}
+
+:80 {
+	bind 0.0.0.0
+	encode zstd gzip
+
+	log {
+		output file C:/utica-mail-v2/storage/logs/u-mail-caddy-access.log
+		format console
+	}
+
+	handle /u-mail-health {
+		respond "U-Mail host reached" 200
+	}
+
+	reverse_proxy 127.0.0.1:8090
+
+	header -Server
+}
+
+https://u-mail.test {
+	bind 0.0.0.0
+	tls internal
+	encode zstd gzip
+
+	log {
+		output file C:/utica-mail-v2/storage/logs/u-mail-caddy-access.log
+		format console
+	}
+
+	handle /u-mail-health {
+		respond "U-Mail host reached" 200
+	}
+
+	reverse_proxy 127.0.0.1:8090
+
+	header -Server
+}

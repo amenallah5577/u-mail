@@ -1,0 +1,14 @@
+services:
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: u-mail-mailpit
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8025:8025"
+      - "127.0.0.1:1025:1025"
+    volumes:
+      - ./.mailpit:/data
+    environment:
+      MP_DATABASE: /data/mailpit.db
+      MP_LABEL: U-Mail Local Inbox
+      MP_MAX_MESSAGES: 5000
