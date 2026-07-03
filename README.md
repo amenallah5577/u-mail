@@ -1,8 +1,33 @@
 # U-Mail
 
-A standalone, Gmail-inspired mailbox for UTICA employees. Internal recipients receive private U-Mail mailbox copies, while external recipients can receive messages through the configured SMTP service.
+![Laravel](https://img.shields.io/badge/Laravel-12.x-ff2d20?style=for-the-badge&logo=laravel&logoColor=white)
+![PHP](https://img.shields.io/badge/PHP-8.4%2B-777bb4?style=for-the-badge&logo=php&logoColor=white)
+![U-Mail](https://img.shields.io/badge/UTICA-Jendouba-d97a07?style=for-the-badge)
+![Tests](https://img.shields.io/badge/tests-122%20passing-15803d?style=for-the-badge)
 
-The interface uses the supplied UTICA logo and locally bundled Poppins/Venera font assets. It does not require remote stylesheets, fonts, logos, or external mail services at runtime.
+**U-Mail** is a standalone, Gmail-inspired mailbox workspace built for UTICA Jendouba employees. It provides private internal mail, external email delivery through a configured SMTP gateway, admin-approved employee onboarding, MFA, audit logging, desktop notifications, and a local Llama 3.2-powered mailbox assistant.
+
+The interface uses UTICA branding with locally bundled Poppins/Venera font assets. It does not depend on remote stylesheets, remote fonts, or third-party UI assets at runtime.
+
+## Screenshots
+
+| Employee Login | Inbox Workspace |
+| --- | --- |
+| ![Employee login](docs/screenshots/00-login.png) | ![Inbox workspace](docs/screenshots/01-inbox.png) |
+
+| Gmail-Style Reader | Compose With U-Assist |
+| --- | --- |
+| ![Opened conversation reader](docs/screenshots/02-thread-reader.png) | ![Compose with U-Assist](docs/screenshots/03-compose-assist.png) |
+
+## Highlights
+
+- Gmail-style mailbox with Inbox, Sent, Drafts, Starred, Archive, Trash, search, threads, replies, forwarding, Cc, Bcc, and private attachments
+- Employee account requests with contact-email confirmation, administrator approval, generated U-Mail address, and emailed temporary password
+- Optional authenticator-app MFA, email-code MFA, recovery codes, password confirmation, session revocation, and security-event auditing
+- Owner-only credential registry, masked by default and audited on reveal
+- U-Assist local Llama 3.2 mailbox agent for authorized search, thread summaries, formal draft preparation, pre-send checks, deadlines, and action plans
+- Same-Wi-Fi HTTPS pilot tooling for coworker testing through `https://u-mail.test`
+- Strict mail privacy: administrators cannot inspect employee mail unless they are recipients
 
 ## Included
 
