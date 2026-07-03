@@ -95,7 +95,7 @@ try {
 
     if (-not $hostReachable) {
         Write-NetworkDiagnostics -Config $config
-        throw "This computer cannot reach the U-Mail host at $($config.ipAddress):443. On the host laptop, run C:\utica-mail-v2\Fix U-Mail Host Access.cmd as administrator, keep it awake, then rerun this installer. If it still fails, the Wi-Fi may have client/AP isolation enabled, which blocks computers on the same Wi-Fi from reaching each other."
+        throw "This computer cannot reach the U-Mail host at $($config.ipAddress):443. On the host laptop, run C:\u-mail\Fix U-Mail Host Access.cmd as administrator, keep it awake, then rerun this installer. If it still fails, the Wi-Fi may have client/AP isolation enabled, which blocks computers on the same Wi-Fi from reaching each other."
     }
 
     Write-Host '[2/5] Connecting the U-Mail address...'
@@ -161,7 +161,7 @@ try {
     Write-Host $_.Exception.Message -ForegroundColor Red
     Write-Host ''
     Write-Host 'Most common causes: the host IP changed, the host laptop is asleep, Windows Firewall is blocking port 443, or the Wi-Fi blocks device-to-device traffic.'
-    Write-Host 'On the host laptop, run C:\utica-mail-v2\Fix U-Mail Host Access.cmd as administrator, then try this installer again.'
+    Write-Host 'On the host laptop, run C:\u-mail\Fix U-Mail Host Access.cmd as administrator, then try this installer again.'
     Write-Host "Diagnostic log: $logPath"
     exit 1
 } finally {

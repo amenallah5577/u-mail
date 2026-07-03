@@ -11,7 +11,7 @@
 	encode zstd gzip
 
 	log {
-		output file C:/utica-mail-v2/storage/logs/u-mail-caddy-access.log
+		output file C:/u-mail/storage/logs/u-mail-caddy-access.log
 		format console
 	}
 
@@ -30,7 +30,7 @@ https://u-mail.test {
 	encode zstd gzip
 
 	log {
-		output file C:/utica-mail-v2/storage/logs/u-mail-caddy-access.log
+		output file C:/u-mail/storage/logs/u-mail-caddy-access.log
 		format console
 	}
 

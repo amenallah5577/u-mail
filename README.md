@@ -75,7 +75,7 @@ Set the MySQL credentials and production URL in `.env` before migrating. Attachm
 Run the scheduler every minute:
 
 ```text
-* * * * * cd /path/to/utica-mail-v2 && php artisan schedule:run
+* * * * * cd /path/to/u-mail && php artisan schedule:run
 ```
 
 Use a long-running queue worker if queued work is added later:
@@ -151,7 +151,7 @@ winget install --id CaddyServer.Caddy --exact
 Prepare the host, firewall, local certificate, backup, and coworker package:
 
 ```powershell
-cd C:\utica-mail-v2
+cd C:\u-mail
 .\prepare-lan-pilot.ps1
 ```
 
@@ -202,7 +202,7 @@ registration with the owner's external email before inviting coworkers.
 From PowerShell:
 
 ```powershell
-cd C:\utica-mail-v2
+cd C:\u-mail
 .\start-u-mail.ps1
 ```
 
@@ -218,7 +218,7 @@ every active account while starting the host, run `.\start-u-mail.ps1 -EnableAge
 Stop the local services with:
 
 ```powershell
-cd C:\utica-mail-v2
+cd C:\u-mail
 .\stop-u-mail.ps1
 ```
 

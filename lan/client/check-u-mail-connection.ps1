@@ -141,7 +141,7 @@ try {
         Write-Host '- This laptop cannot reach the host laptop at all on port 443.'
         Write-Host '- Confirm both laptops are on the same non-Guest Wi-Fi.'
         Write-Host '- Keep the host laptop awake and plugged in.'
-        Write-Host '- On the host laptop, run C:\utica-mail-v2\Fix U-Mail Host Access.cmd as administrator.'
+        Write-Host '- On the host laptop, run C:\u-mail\Fix U-Mail Host Access.cmd as administrator.'
         Write-Host '- If it still fails after the host repair, the Wi-Fi/router likely has client isolation enabled.'
     } elseif (-not $hostsReady -or -not ($resolved -contains $ipAddress) -or -not $trustedCertificate) {
         Write-Host '- Run "Install U-Mail Access.cmd" as administrator from this same extracted folder.'
