@@ -11,6 +11,10 @@ The interface uses UTICA branding with locally bundled Poppins/Venera font asset
 
 ## Screenshots
 
+[90-second screenshot walkthrough](docs/u-mail-90-second-walkthrough.mp4) · [Demo script](docs/demo-script.md) · [Architecture and trust boundaries](docs/architecture.md)
+
+The walkthrough uses the repository's demo screenshots; it is not a recording of live AI output. The architecture notes describe the current implementation and its limitations.
+
 | Employee Login | Inbox Workspace |
 | --- | --- |
 | ![Employee login](docs/screenshots/00-login.png) | ![Inbox workspace](docs/screenshots/01-inbox.png) |
