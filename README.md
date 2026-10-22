@@ -3,7 +3,7 @@
 ![Laravel](https://img.shields.io/badge/Laravel-13.x-ff2d20?style=for-the-badge&logo=laravel&logoColor=white)
 ![PHP](https://img.shields.io/badge/PHP-8.4%2B-777bb4?style=for-the-badge&logo=php&logoColor=white)
 ![U-Mail](https://img.shields.io/badge/UTICA-Jendouba-d97a07?style=for-the-badge)
-![Tests](https://img.shields.io/badge/tests-122%20passing-15803d?style=for-the-badge)
+[![Laravel tests](https://github.com/amenallah5577/u-mail/actions/workflows/laravel-tests.yml/badge.svg)](https://github.com/amenallah5577/u-mail/actions/workflows/laravel-tests.yml)
 
 **U-Mail** is a standalone, Gmail-inspired mailbox workspace built for UTICA Jendouba employees. It provides private internal mail, external email delivery through a configured SMTP gateway, admin-approved employee onboarding, MFA, audit logging, desktop notifications, and a local Llama 3.2-powered mailbox assistant.
 
@@ -141,6 +141,8 @@ Old database backups can still contain recoverable password copies. Restrict the
 ## Local Development And Tests
 
 The checked-in `.env.example` targets MySQL. Automated tests use isolated in-memory SQLite.
+
+GitHub Actions runs the full Laravel suite and frontend build on pushes and pull requests using PHP 8.4 and Node.js 22. CI uses in-memory SQLite, an array mailer, and no production credentials or running Ollama service.
 
 ### Same-Wi-Fi Coworker Pilot
 
