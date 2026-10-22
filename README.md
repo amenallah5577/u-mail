@@ -1,6 +1,6 @@
 # U-Mail
 
-![Laravel](https://img.shields.io/badge/Laravel-12.x-ff2d20?style=for-the-badge&logo=laravel&logoColor=white)
+![Laravel](https://img.shields.io/badge/Laravel-13.x-ff2d20?style=for-the-badge&logo=laravel&logoColor=white)
 ![PHP](https://img.shields.io/badge/PHP-8.4%2B-777bb4?style=for-the-badge&logo=php&logoColor=white)
 ![U-Mail](https://img.shields.io/badge/UTICA-Jendouba-d97a07?style=for-the-badge)
 ![Tests](https://img.shields.io/badge/tests-122%20passing-15803d?style=for-the-badge)
@@ -24,7 +24,6 @@ The interface uses UTICA branding with locally bundled Poppins/Venera font asset
 - Gmail-style mailbox with Inbox, Sent, Drafts, Starred, Archive, Trash, search, threads, replies, forwarding, Cc, Bcc, and private attachments
 - Employee account requests with contact-email confirmation, administrator approval, generated U-Mail address, and emailed temporary password
 - Optional authenticator-app MFA, email-code MFA, recovery codes, password confirmation, session revocation, and security-event auditing
-- Owner-only credential registry, masked by default and audited on reveal
 - U-Assist local Llama 3.2 mailbox agent for authorized search, thread summaries, formal draft preparation, pre-send checks, deadlines, and action plans
 - Same-Wi-Fi HTTPS pilot tooling for coworker testing through `https://u-mail.test`
 - Strict mail privacy: administrators cannot inspect employee mail unless they are recipients
@@ -43,7 +42,7 @@ The interface uses UTICA branding with locally bundled Poppins/Venera font asset
 - Generated U-Mail addresses as the primary sending and receiving identity
 - Queued internet delivery with user-friendly sending, delivered, and failed states
 - Optional authenticator-app and email-code MFA for every active account
-- Self-service password changes that revoke other sessions and update the owner credential registry
+- Self-service password changes that revoke other sessions
 - Click-to-open account menu with editable names, phone numbers, and privately stored profile photos
 - Five-minute password confirmation for sensitive administrator and owner operations
 - Immutable security-event auditing with 180-day retention
@@ -120,9 +119,17 @@ MAIL_FROM_ADDRESS=no-reply@your-verified-domain.example
 MAIL_FROM_NAME="${APP_NAME}"
 ```
 
-Set `OWNER_EMAIL` to the email address of an active administrator. That account alone can open `/owner/credentials`, which lists every account and its latest known password. Authentication passwords remain one-way hashed; the owner registry stores a separate encrypted-at-rest copy that is synchronized during activation, password reset, and `utica:create-admin`. Protect the application key and owner account carefully because access to either can expose these credentials.
+Set `OWNER_EMAIL` to the email address of an active administrator for owner-only security-event review and administrator MFA recovery. Owners sign in to the employee-management dashboard. Passwords are stored only as one-way hashes; there is no password registry or reveal endpoint. Forgotten passwords are replaced through `/reset-password` using a single-use, hashed code delivered to the verified private contact email. Reset codes expire after 15 minutes, stop accepting guesses after five failures, and successful resets revoke existing sessions.
 
 ## Production Security
+
+### Upgrading from the password registry
+
+Deploy the updated application and run `php artisan migrate --force` during a maintenance window, then restart queue workers with `php artisan queue:restart`. Migration `2026_10_22_000001_drop_account_credentials_table` permanently removes the legacy encrypted password copies. Existing password hashes and logins continue to work; owners now land on employee management. Rolling the migration back creates an empty legacy table and cannot restore the removed passwords.
+
+Old database backups can still contain recoverable password copies. Restrict their access and retire them under your backup-retention policy. If those copies or the application key were exposed, affected users should reset their passwords. Do not restore a legacy registry backup into the updated application.
+
+### Configuration
 
 - Serve U-Mail only through HTTPS and set `APP_DEBUG=false`.
 - Set `SESSION_SECURE_COOKIE=true`, `SESSION_ENCRYPT=true`, and `SESSION_SAME_SITE=strict`.
@@ -130,7 +137,6 @@ Set `OWNER_EMAIL` to the email address of an active administrator. That account 
 - Administrators are automatically signed out after 15 idle minutes and cannot use persistent sign-in.
 - Users may enable authenticator-app MFA, email-code MFA, or both from **Security**.
 - Password-reset codes expire after 15 minutes; activation codes remain valid for 24 hours.
-- Owner credential reveals are masked by default, require recent password confirmation, and are audited.
 
 ## Local Development And Tests
 

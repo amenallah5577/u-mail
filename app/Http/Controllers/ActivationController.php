@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Services\AccountCredentialService;
 use App\Services\AccountTokenService;
 use App\Services\AuthenticationSecurityService;
 use App\Services\SecurityAuditService;
@@ -25,7 +24,7 @@ class ActivationController extends Controller
         return view('auth.reset-password');
     }
 
-    public function activate(Request $request, AccountTokenService $tokens, AccountCredentialService $credentials, SecurityAuditService $audit, AuthenticationSecurityService $security)
+    public function activate(Request $request, AccountTokenService $tokens, SecurityAuditService $audit, AuthenticationSecurityService $security)
     {
         $data = $request->validate([
             'email' => ['required', 'email'],
@@ -55,7 +54,6 @@ class ActivationController extends Controller
             'status' => 'active',
             'activated_at' => $user->activated_at ?? now(),
         ]);
-        $credentials->store($user, $data['password']);
         $audit->record('account.activated', target: $user, request: $request);
 
         return redirect()->route($user->isAdmin() ? 'admin.login' : 'login')->with('status', 'Password set. You can now sign in.');
@@ -81,7 +79,7 @@ class ActivationController extends Controller
         return back()->with('status', 'If an active account exists for that U-Mail address, a reset code has been sent.');
     }
 
-    public function reset(Request $request, AccountTokenService $tokens, AccountCredentialService $credentials, SessionService $sessions, SecurityAuditService $audit, AuthenticationSecurityService $security)
+    public function reset(Request $request, AccountTokenService $tokens, SessionService $sessions, SecurityAuditService $audit, AuthenticationSecurityService $security)
     {
         $data = $request->validate([
             'email' => ['required', 'email'],
@@ -107,7 +105,6 @@ class ActivationController extends Controller
 
         $security->clearTokenFailures($request, 'reset', $email);
         $user->update(['password' => $data['password']]);
-        $credentials->store($user, $data['password']);
         $sessions->revoke($user);
         $audit->record('password.reset', target: $user, request: $request);
 

@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Models\AccountToken;
 use App\Models\User;
 use App\Notifications\AccountCodeNotification;
-use App\Services\AccountCredentialService;
 use App\Services\AccountTokenService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -48,7 +47,6 @@ class AccountAccessTest extends TestCase
         $user->refresh();
         $this->assertTrue($user->isActive());
         $this->assertTrue(Hash::check('StrongPass123!', $user->password));
-        $this->assertSame('StrongPass123!', $user->credential->password_encrypted);
         $this->assertNotNull(AccountToken::first()->used_at);
 
         $this->post('/activate', [
@@ -103,7 +101,6 @@ class AccountAccessTest extends TestCase
         ])->assertRedirect('/login');
 
         $this->assertTrue(Hash::check('NewStrongPass123!', $employee->fresh()->password));
-        $this->assertSame('NewStrongPass123!', $employee->credential->password_encrypted);
         $this->assertDatabaseMissing('sessions', ['id' => 'employee-session']);
         $this->assertSame($employee->email, $employee->routeNotificationFor('mail'));
     }
@@ -167,99 +164,6 @@ class AccountAccessTest extends TestCase
             ->assertStatus(422);
     }
 
-    public function test_only_the_configured_owner_can_view_the_credentials_page(): void
-    {
-        config(['owner.email' => 'owner@utica.test']);
-        $owner = User::factory()->create(['name' => 'Owner Account', 'email' => 'owner@utica.test', 'role' => 'admin']);
-        $admin = User::factory()->create(['name' => 'Other Admin', 'role' => 'admin']);
-        $employee = User::factory()->create(['name' => 'Active Employee']);
-        $pending = User::factory()->create(['name' => 'Pending Employee', 'status' => 'pending', 'password' => null]);
-        $deleted = User::factory()->create(['name' => 'Deleted Employee']);
-        $deleted->delete();
-        app(AccountCredentialService::class)->store($owner, 'OwnerPass123');
-        app(AccountCredentialService::class)->store($employee, 'EmployeePass123');
-        app(AccountCredentialService::class)->store($deleted, 'DeletedPass123');
-
-        $this->actingAs($owner)
-            ->get('/owner/credentials')
-            ->assertOk()
-            ->assertHeader('Cache-Control', 'max-age=0, must-revalidate, no-cache, no-store, private')
-            ->assertHeader('Vary', 'Cookie')
-            ->assertSee($deleted->name)
-            ->assertSee($employee->name)
-            ->assertSee($owner->name)
-            ->assertSee($pending->name)
-            ->assertDontSee('DeletedPass123')
-            ->assertDontSee('EmployeePass123')
-            ->assertDontSee('OwnerPass123');
-
-        $this->post('/owner/credentials/'.$owner->id.'/reveal')
-            ->assertRedirect('/confirm-password');
-        $this->assertDatabaseMissing('security_events', ['event' => 'owner.credential_revealed']);
-
-        $this->withSession(['auth.password_confirmed_at' => time()])
-            ->post('/owner/credentials/'.$owner->id.'/reveal')
-            ->assertRedirect('/owner/credentials');
-        $this->assertDatabaseHas('security_events', [
-            'event' => 'owner.credential_revealed',
-            'actor_id' => $owner->id,
-            'target_user_id' => $owner->id,
-        ]);
-        $this->get('/owner/credentials')
-            ->assertSee('OwnerPass123')
-            ->assertDontSee('EmployeePass123');
-
-        $this->get('/admin/employees')
-            ->assertOk()
-            ->assertDontSee('OwnerPass123')
-            ->assertDontSee('EmployeePass123');
-
-        $this->actingAs($admin)
-            ->get('/owner/credentials')
-            ->assertForbidden();
-
-        $this->actingAs($employee)
-            ->get('/owner/credentials')
-            ->assertForbidden();
-
-        $storedPassword = DB::table('account_credentials')
-            ->where('user_id', $owner->id)
-            ->value('password_encrypted');
-        $this->assertNotSame('OwnerPass123', $storedPassword);
-    }
-
-    public function test_owner_can_search_and_filter_the_credential_registry(): void
-    {
-        config(['owner.email' => 'owner@utica.test']);
-        $owner = User::factory()->create(['email' => 'owner@utica.test', 'role' => 'admin']);
-        $deleted = User::factory()->create([
-            'name' => 'Archived Credential',
-            'email' => 'archived.contact@example.test',
-            'public_email' => 'archived.credential@u-mail.local',
-        ]);
-        $other = User::factory()->create([
-            'name' => 'Visible Elsewhere',
-            'email' => 'other.contact@example.test',
-            'public_email' => 'other.account@u-mail.local',
-        ]);
-        $deleted->delete();
-
-        $this->actingAs($owner)
-            ->get('/owner/credentials?q=archived&role=employee&status=deleted')
-            ->assertOk()
-            ->assertSee('Find credentials')
-            ->assertSeeText('1 matching account')
-            ->assertSee($deleted->public_email)
-            ->assertDontSee($deleted->email)
-            ->assertDontSee($other->email)
-            ->assertDontSee($other->public_email);
-
-        $this->get('/owner/credentials?q=archived.contact%40example.test')
-            ->assertOk()
-            ->assertSeeText('0 matching accounts')
-            ->assertDontSee($deleted->public_email);
-    }
-
     public function test_admin_can_search_and_filter_managed_accounts_without_hiding_requests(): void
     {
         $admin = User::factory()->create(['role' => 'admin']);
@@ -303,7 +207,7 @@ class AccountAccessTest extends TestCase
             ->assertDontSee($target->public_email);
     }
 
-    public function test_create_admin_command_synchronizes_the_owner_credential_registry(): void
+    public function test_create_admin_command_stores_only_a_password_hash(): void
     {
         $this->artisan('utica:create-admin', [
             'email' => 'new-admin@utica.test',
@@ -314,11 +218,8 @@ class AccountAccessTest extends TestCase
         $admin = User::where('email', 'new-admin@utica.test')->firstOrFail();
 
         $this->assertTrue($admin->isAdmin());
-        $this->assertSame('CommandPass123!', $admin->credential->password_encrypted);
-        $this->assertNotSame(
-            'CommandPass123!',
-            DB::table('account_credentials')->where('user_id', $admin->id)->value('password_encrypted'),
-        );
+        $this->assertTrue(Hash::check('CommandPass123!', $admin->password));
+        $this->assertFalse(\Illuminate\Support\Facades\Schema::hasTable('account_credentials'));
     }
 
     public function test_inactive_user_cannot_login_and_employee_cannot_access_admin(): void
@@ -328,7 +229,7 @@ class AccountAccessTest extends TestCase
         $this->post('/login', ['email' => $inactive->email, 'password' => 'password'])->assertSessionHasErrors('email');
 
         $this->get('/admin/employees')->assertRedirect($adminLoginPath);
-        $this->get('/owner/credentials')->assertRedirect($adminLoginPath);
+        $this->get('/owner/credentials')->assertNotFound();
 
         $employee = User::factory()->create();
         $this->actingAs($employee)
@@ -372,9 +273,9 @@ class AccountAccessTest extends TestCase
 
         $this->post('/logout')->assertRedirect($adminLoginPath);
         $this->post($adminLoginPath, ['email' => $owner->email, 'password' => 'password'])
-            ->assertRedirect('/owner/credentials');
+            ->assertRedirect('/admin/employees');
         $this->assertAuthenticatedAs($owner);
-        $this->get('/login')->assertRedirect('/owner/credentials');
+        $this->get('/login')->assertRedirect('/admin/employees');
     }
 
     public function test_login_page_has_no_admin_route_reference(): void
@@ -423,7 +324,7 @@ class AccountAccessTest extends TestCase
         $this->post('/logout');
 
         $this->post($adminLoginPath, ['email' => $owner->email, 'password' => 'password', 'remember' => 'on'])
-            ->assertRedirect('/owner/credentials');
+            ->assertRedirect('/admin/employees');
         $this->assertNull($owner->fresh()->remember_token);
         $this->post('/logout');
         $this->assertGuest();
@@ -538,7 +439,7 @@ class AccountAccessTest extends TestCase
         $this->assertGuest();
 
         $this->post($adminLoginPath, ['email' => $owner->email, 'password' => 'password'])
-            ->assertRedirect('/owner/credentials');
+            ->assertRedirect('/admin/employees');
         $this->assertAuthenticatedAs($owner);
 
         $this->post('/logout')->assertRedirect($adminLoginPath);

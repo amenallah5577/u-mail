@@ -19,7 +19,6 @@ use App\Http\Controllers\MessageReactionController;
 use App\Http\Controllers\MfaChallengeController;
 use App\Http\Controllers\NotificationSettingsController;
 use App\Http\Controllers\OnboardingTutorialController;
-use App\Http\Controllers\OwnerCredentialController;
 use App\Http\Controllers\PasswordConfirmationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegistrationController;
@@ -117,8 +116,6 @@ Route::middleware(['auth', 'active', 'admin.idle', 'no.history'])->group(functio
     });
 
     Route::middleware('owner')->prefix('owner')->name('owner.')->group(function () {
-        Route::get('/credentials', [OwnerCredentialController::class, 'index'])->name('credentials');
-        Route::post('/credentials/{user}/reveal', [OwnerCredentialController::class, 'reveal'])->middleware('password.confirmed')->name('credentials.reveal');
         Route::get('/security-events', [SecurityEventController::class, 'index'])->name('security-events');
     });
 

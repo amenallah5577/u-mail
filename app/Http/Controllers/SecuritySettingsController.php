@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\AccountCredentialService;
 use App\Services\MfaService;
 use App\Services\SecurityAuditService;
 use App\Services\SessionService;
@@ -72,7 +71,7 @@ class SecuritySettingsController extends Controller
         return back()->with('status', 'New recovery codes generated.')->with('recovery_codes', $codes);
     }
 
-    public function changePassword(Request $request, AccountCredentialService $credentials, SessionService $sessions, SecurityAuditService $audit)
+    public function changePassword(Request $request, SessionService $sessions, SecurityAuditService $audit)
     {
         $data = $request->validate([
             'current_password' => ['required', 'string'],
@@ -90,7 +89,6 @@ class SecuritySettingsController extends Controller
         }
 
         $user->update(['password' => $data['password']]);
-        $credentials->store($user, $data['password']);
         $sessions->revoke($user, $request->session()->getId());
         $request->session()->forget('auth.password_confirmed_at');
         $audit->record('password.changed', $user, $user, request: $request);

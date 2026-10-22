@@ -86,9 +86,6 @@
         @if(auth()->user()->isOwner())
             <div class="nav-section">Owner</div>
             <nav class="mail-nav">
-                <a href="{{ route('owner.credentials') }}" class="{{ request()->routeIs('owner.credentials*') ? 'active' : '' }}" title="Credentials">
-                    <span class="nav-icon"><x-icon name="key" /></span><span>Credentials</span>
-                </a>
                 <a href="{{ route('owner.security-events') }}" class="{{ request()->routeIs('owner.security-events') ? 'active' : '' }}" title="Security events">
                     <span class="nav-icon"><x-icon name="activity" /></span><span>Security events</span>
                 </a>
@@ -118,8 +115,6 @@
             <button class="menu-button" type="button" data-menu aria-label="Open navigation"><x-icon name="menu" /></button>
             @if(request()->routeIs('admin.employees'))
                 <div class="topbar-context"><x-icon name="users" /><span><strong>Employee management</strong><small>Account directory and approvals</small></span></div>
-            @elseif(request()->routeIs('owner.credentials'))
-                <div class="topbar-context"><x-icon name="key" /><span><strong>Credential registry</strong><small>Owner-only account access</small></span></div>
             @elseif(request()->routeIs('calendar.*'))
                 <div class="topbar-context"><x-icon name="calendar" /><span><strong>Calendar</strong><small>Shared and personal events</small></span></div>
             @elseif(request()->routeIs('directory'))

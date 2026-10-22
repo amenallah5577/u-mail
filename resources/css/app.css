@@ -250,7 +250,7 @@ h1, h2, h3 { font-family: Venera, Poppins, sans-serif; font-weight: 900; }
 .flash.success { border-color: var(--success); }
 .flash.error { border-color: var(--danger); color: var(--danger); }
 
-.mail-page, .thread-page, .admin-page, .credentials-page, .security-page, .account-page, .calendar-page { padding: 8vh 4vw 9vh; animation: fadeUp .8s ease both; }
+.mail-page, .thread-page, .admin-page, .security-page, .account-page, .calendar-page { padding: 8vh 4vw 9vh; animation: fadeUp .8s ease both; }
 .page-heading, .thread-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; margin-bottom: 3rem; }
 .page-heading h1, .thread-head h1 { margin: 0; max-width: 900px; color: var(--ink); font-size: clamp(1.55rem, 3vw, 2.8rem); font-weight: 500; line-height: 1.08; letter-spacing: .015em; text-transform: uppercase; }
 .page-count { color: var(--stone); font-size: .58rem; letter-spacing: .18em; text-transform: uppercase; }
@@ -495,7 +495,7 @@ h1, h2, h3 { font-family: Venera, Poppins, sans-serif; font-weight: 900; }
 .request-actions input { width: 220px; border: 1px solid var(--mist); padding: .55rem .7rem; color: var(--ink); background: var(--white); font-size: .62rem; }
 .request-actions .soft-button { padding: .6rem .75rem; white-space: nowrap; }
 .compact-empty { min-height: 180px; }
-.admin-page .page-heading h1, .credentials-page .page-heading h1 { font-size: clamp(1.35rem, 2vw, 2rem); }
+.admin-page .page-heading h1 { font-size: clamp(1.35rem, 2vw, 2rem); }
 .account-finder {
     display: grid;
     grid-template-columns: minmax(260px, 1fr) minmax(145px, .34fr) minmax(155px, .36fr) auto auto;
@@ -523,23 +523,9 @@ h1, h2, h3 { font-family: Venera, Poppins, sans-serif; font-weight: 900; }
 .finder-summary { min-height: 38px; margin-bottom: 1px; padding: .55rem 1rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; color: var(--stone); background: var(--cream); font-size: .53rem; letter-spacing: .12em; text-transform: uppercase; }
 .finder-summary strong { color: var(--warm); font-size: .68rem; font-weight: 600; }
 .finder-summary small { color: var(--stone); font-size: .5rem; }
-.credentials-finder { margin-bottom: 1px; }
-.credentials-summary { margin-bottom: 1px; }
 .account-empty { grid-column: 1 / -1; }
 .account-empty > .ui-icon { width: 29px; height: 29px; color: var(--warm); }
 .account-empty .soft-button { margin-top: 1.2rem; }
-.credentials-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--mist); }
-.credential-card { min-width: 0; padding: 2rem; background: var(--white); }
-.credential-card small { display: block; color: var(--warm); font-size: .53rem; letter-spacing: .18em; text-transform: uppercase; }
-.credential-card h2 { margin: 1.5rem 0 .3rem; color: var(--ink); font-size: clamp(.9rem, 1.5vw, 1.2rem); overflow-wrap: anywhere; }
-.credential-card p { margin-bottom: 2rem; color: var(--stone); font-size: .65rem; overflow-wrap: anywhere; }
-.credential-card .credential-meta { padding: 0; border: 0; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
-.credential-card .credential-password { padding-top: 1rem; border-top: 1px solid var(--mist); }
-.credential-card span, .credential-card code { display: block; }
-.credential-card span { margin-bottom: .4rem; color: var(--stone); font-size: .52rem; letter-spacing: .16em; text-transform: uppercase; }
-.credential-card .status { margin: 0; }
-.credential-card code { color: var(--warm); font: 600 .9rem Poppins, sans-serif; overflow-wrap: anywhere; }
-.credential-password form { margin-top: .8rem; }
 .security-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--mist); }
 .security-card form { display: grid; gap: .8rem; margin-top: 1rem; }
 .password-security-card { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(240px, .8fr) minmax(300px, 1.2fr); gap: 3rem; align-items: start; }
@@ -1082,7 +1068,7 @@ html[data-theme-preference="dark"] {
     html.sidebar-collapsed .sidebar { width: 270px; }
     .menu-button { display: block; }
     .topbar { padding: 0 1rem; }
-    .mail-page, .thread-page, .admin-page, .credentials-page, .security-page, .account-page, .calendar-page { padding: 6vh 1rem; }
+    .mail-page, .thread-page, .admin-page, .security-page, .account-page, .calendar-page { padding: 6vh 1rem; }
     .mail-content { grid-template-columns: minmax(90px, 140px) minmax(0, 1fr) auto; }
     .mail-content .snippet, .paperclip { display: none; }
     .admin-grid { grid-template-columns: 1fr; }
@@ -1091,7 +1077,6 @@ html[data-theme-preference="dark"] {
     .request-actions input, .request-actions .soft-button { width: 100%; }
     .account-finder { grid-template-columns: minmax(0, 1fr) minmax(150px, .45fr) minmax(160px, .48fr) auto; }
     .finder-clear { grid-column: 1 / -1; min-height: 42px; display: flex; }
-    .credentials-grid { grid-template-columns: 1fr; }
     .security-grid { grid-template-columns: 1fr; }
     .password-security-card { grid-column: auto; grid-template-columns: 1fr; gap: 2rem; }
     .account-settings-grid, .profile-grid, .appearance-grid, .calendar-shell, .calendar-agenda-item { grid-template-columns: 1fr; }

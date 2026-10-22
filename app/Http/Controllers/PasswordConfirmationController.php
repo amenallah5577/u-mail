@@ -25,9 +25,7 @@ class PasswordConfirmationController extends Controller
         $request->session()->put('auth.password_confirmed_at', time());
         $audit->record('password_confirmation.succeeded', $request->user(), request: $request);
 
-        $destination = $request->user()->isOwner()
-            ? route('owner.credentials')
-            : ($request->user()->isAdmin() ? route('admin.employees') : route('security.settings'));
+        $destination = $request->user()->isAdmin() ? route('admin.employees') : route('security.settings');
 
         return redirect()->intended($destination);
     }
