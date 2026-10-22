@@ -29,8 +29,11 @@ class MailService
                 abort_unless($draft->sender_id === $sender->id && $draft->status === 'draft', 403);
             }
 
+            $data = $this->authorizeReplyContext($sender, $data, $draft);
             $message = $draft ?? new Message(['sender_id' => $sender->id, 'status' => 'draft']);
             $message->fill($this->messageData($data));
+            $message->thread_id = $data['thread_id'] ?? null;
+            $message->parent_id = $data['parent_id'] ?? null;
             $message->sender_id = $sender->id;
             $message->status = 'draft';
             $message->save();
@@ -54,6 +57,7 @@ class MailService
                 abort_unless($draft->sender_id === $sender->id && in_array($draft->status, ['draft', 'scheduled'], true), 403);
             }
 
+            $data = $this->authorizeReplyContext($sender, $data, $draft);
             $recipients = $this->resolveRecipients($sender, $data, true);
             $thread = $this->resolveThread($sender, $data, $draft);
             $message = $draft ?? new Message;
@@ -116,6 +120,7 @@ class MailService
                 abort_unless($draft->sender_id === $sender->id && in_array($draft->status, ['draft', 'scheduled'], true), 403);
             }
 
+            $data = $this->authorizeReplyContext($sender, $data, $draft);
             $message = $draft ?? new Message(['sender_id' => $sender->id]);
             $message->fill($this->messageData($data));
             $message->thread_id = $data['thread_id'] ?? $message->thread_id;
@@ -152,6 +157,34 @@ class MailService
         ];
     }
 
+    private function authorizeReplyContext(User $sender, array $data, ?Message $draft): array
+    {
+        $threadId = $data['thread_id'] ?? $draft?->thread_id;
+        $parentId = $data['parent_id'] ?? $draft?->parent_id;
+
+        if ($parentId) {
+            $parent = Message::whereKey($parentId)
+                ->where('status', 'sent')
+                ->whereHas('mailboxEntries', fn ($entry) => $entry->where('user_id', $sender->id))
+                ->first();
+            abort_unless($parent, 403);
+            abort_if($threadId && (int) $threadId !== (int) $parent->thread_id, 422, 'The reply must belong to the selected conversation.');
+            $threadId = $parent->thread_id;
+        }
+
+        if ($threadId) {
+            $allowed = MailboxEntry::where('user_id', $sender->id)
+                // A draft or scheduled message cannot grant itself access.
+                ->when($draft, fn ($entry) => $entry->where('message_id', '!=', $draft->id))
+                ->whereHas('message', fn ($message) => $message
+                    ->where('thread_id', $threadId)->where('status', 'sent'))
+                ->exists();
+            abort_unless($allowed, 403);
+        }
+
+        return array_replace($data, ['thread_id' => $threadId, 'parent_id' => $parentId]);
+    }
+
     private function resolveThread(User $sender, array $data, ?Message $draft): MailThread
     {
         $threadId = $data['thread_id'] ?? $draft?->thread_id;
@@ -160,7 +193,7 @@ class MailService
             $allowed = MailboxEntry::where('user_id', $sender->id)
                 ->whereHas('message', fn ($query) => $query->where('thread_id', $thread->id))
                 ->exists();
-            abort_unless($allowed || $draft?->thread_id === $thread->id, 403);
+            abort_unless($allowed, 403);
 
             return $thread;
         }
