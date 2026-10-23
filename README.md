@@ -81,10 +81,10 @@ Run the scheduler every minute:
 * * * * * cd /path/to/u-mail && php artisan schedule:run
 ```
 
-Use a long-running queue worker if queued work is added later:
+Run a long-running queue worker for external delivery, critical account mail and agent jobs:
 
 ```powershell
-php artisan queue:work
+php artisan queue:work --queue=critical-mail,external-mail,default --tries=5
 ```
 
 ## Employee Registration
@@ -143,6 +143,8 @@ Old database backups can still contain recoverable password copies. Restrict the
 - Password-reset codes expire after 15 minutes; activation codes remain valid for 24 hours.
 
 ## Local Development And Tests
+
+Follow the [clean-checkout setup walkthrough](docs/setup.md) for installation, SQLite configuration, migrations, test commands and local startup. The [architecture notes](docs/architecture.md) explain the main deployment trade-off.
 
 The checked-in `.env.example` targets MySQL. Automated tests use isolated in-memory SQLite.
 
