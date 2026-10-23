@@ -9,7 +9,7 @@ The accompanying MP4 is a captioned walkthrough of the repository's existing dem
 | 25–40s | Thread reader | A thread combines reading, reply preparation and contextual U-Assist actions. Attachment downloads and previews check mailbox access. Administrators cannot inspect arbitrary employee mail. |
 | 40–60s | Compose | U-Assist uses local Llama 3.2 to help prepare and review messages. Users review prepared drafts and confirm mailbox actions. Authorization is enforced in application code, including when model output references a conversation. |
 | 60–75s | Architecture | Laravel serves the UI and checks access. MySQL stores application state and queued work; files remain private. Workers call local Ollama and the SMTP gateway. The scheduler handles due mail and retention. |
-| 75–90s | Engineering evidence | The hardening branch removes recoverable password copies, verifies expiring single-use resets, and adds CI. The suite passes 134 tests with 1,083 assertions. This is a local and CI result, not a security certification. |
+| 75–90s | Engineering evidence | The merged security changes remove recoverable password copies, verify expiring single-use resets, and add CI. The suite passes 134 tests with 1,083 assertions. This is a local and CI result, not a security certification. |
 
 ## Recording a live replacement
 

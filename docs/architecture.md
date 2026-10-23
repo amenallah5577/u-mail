@@ -1,6 +1,6 @@
 # U-Mail architecture
 
-This diagram describes the implementation on the security hardening branch. It is a Laravel monolith with a separate queue worker and scheduler, not a collection of microservices.
+This diagram describes the implementation on `main` after the security changes. It is a Laravel monolith with a separate queue worker and scheduler.
 
 ```mermaid
 flowchart LR
