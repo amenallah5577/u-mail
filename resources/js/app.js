@@ -8,9 +8,27 @@ const signedInUserId = document.body?.dataset.userId;
 const sessionCheckUrl = document.body?.dataset.sessionCheckUrl || '/auth/session';
 const loginUrl = document.body?.dataset.loginUrl || '/login';
 const agentRunUrl = document.body?.dataset.agentRunUrl || '/agent/runs';
+const draftStoreUrl = document.body?.dataset.draftStoreUrl || '/messages/draft';
+const draftShowUrl = document.body?.dataset.draftShowUrl || '/messages/__MESSAGE__/draft';
+const draftDeleteUrl = document.body?.dataset.draftDeleteUrl || '/messages/__MESSAGE__/draft';
+const directoryUrl = document.body?.dataset.directoryUrl || '/directory';
+const pollUrl = document.body?.dataset.pollUrl || '/poll';
+const notificationsUpdateUrl = document.body?.dataset.notificationsUpdateUrl || '/settings/notifications';
+const notificationIconUrl = document.body?.dataset.notificationIconUrl || '/images/utica-jendouba-logo.png';
+const notificationBadgeUrl = document.body?.dataset.notificationBadgeUrl || '/favicon.png';
 const signedOutHistoryKey = 'u-mail:signed-out';
 let dirty = false;
 let suggestionTimer;
+
+function urlWithMessageId(template, messageId) {
+    return template.replace('__MESSAGE__', encodeURIComponent(messageId));
+}
+
+function directorySearchUrl(query) {
+    const url = new URL(directoryUrl, window.location.href);
+    url.searchParams.set('q', query);
+    return url.toString();
+}
 
 function escapeHtml(value) {
     return String(value).replace(/[&<>"']/g, character => ({
@@ -169,7 +187,7 @@ document.querySelectorAll('[data-open-draft]').forEach(link => link.addEventList
     event.preventDefault();
     const draftId = link.dataset.draftId || '';
     openCompose({ id: draftId, loading: true });
-    fetch(link.dataset.draftUrl, {
+    fetch(link.dataset.draftUrl || urlWithMessageId(draftShowUrl, link.dataset.draftId), {
         cache: 'no-store',
         credentials: 'same-origin',
         headers: { Accept: 'application/json' },
@@ -1003,7 +1021,7 @@ photoInput?.addEventListener('change', () => {
 document.querySelector('[data-discard]')?.addEventListener('click', async () => {
     const draftId = document.getElementById('draftId').value;
     if (draftId) {
-        await fetch(`/messages/${draftId}/draft`, { method: 'DELETE', headers: { 'X-CSRF-TOKEN': csrf, Accept: 'application/json' } });
+        await fetch(urlWithMessageId(draftDeleteUrl, draftId), { method: 'DELETE', headers: { 'X-CSRF-TOKEN': csrf, Accept: 'application/json' } });
     }
     dirty = false;
     closeCompose(false);
@@ -1033,7 +1051,7 @@ async function saveDraft() {
     data.append('body_html', body.innerHTML);
     draftStatus.textContent = 'Saving...';
     try {
-        const response = await fetch('/messages/draft', { method: 'POST', headers: { 'X-CSRF-TOKEN': csrf, Accept: 'application/json' }, body: data });
+        const response = await fetch(draftStoreUrl, { method: 'POST', headers: { 'X-CSRF-TOKEN': csrf, Accept: 'application/json' }, body: data });
         const result = await response.json();
         if (!response.ok) throw new Error(result.message || 'Unable to save');
         document.getElementById('draftId').value = result.id;
@@ -1066,7 +1084,7 @@ toInput?.addEventListener('input', () => {
         return;
     }
     suggestionTimer = setTimeout(async () => {
-        const users = await fetch(`/directory?q=${encodeURIComponent(query)}`, { headers: { Accept: 'application/json' } }).then(response => response.json());
+        const users = await fetch(directorySearchUrl(query), { headers: { Accept: 'application/json' } }).then(response => response.json());
         suggestions.innerHTML = '';
         users.forEach(user => {
             const button = document.createElement('button');
@@ -1154,8 +1172,8 @@ function showMailNotification(item) {
     if (!notificationSupported() || Notification.permission !== 'granted' || anyNotificationTabActive()) return;
     const notification = new Notification(`New mail from ${item.sender}`, {
         body: item.subject,
-        icon: '/images/utica-jendouba-logo.png',
-        badge: '/favicon.png',
+        icon: notificationIconUrl,
+        badge: notificationBadgeUrl,
         tag: `u-mail-entry-${item.id}`,
     });
     notification.onclick = () => {
@@ -1170,8 +1188,9 @@ async function pollMailbox() {
     try {
         const leader = mailNotificationsEnabled && claimNotificationLease();
         const cursor = leader ? notificationCursor() : null;
-        const pollUrl = leader && cursor !== null ? `/poll?notification_cursor=${encodeURIComponent(cursor)}` : '/poll';
-        const data = await fetch(pollUrl, { headers: { Accept: 'application/json' } }).then(response => response.json());
+        const currentPollUrl = new URL(pollUrl, window.location.href);
+        if (leader && cursor !== null) currentPollUrl.searchParams.set('notification_cursor', String(cursor));
+        const data = await fetch(currentPollUrl, { headers: { Accept: 'application/json' } }).then(response => response.json());
         const unread = document.querySelector('[data-count="inbox"]');
         if (unread) unread.textContent = data.unread || '';
         if (leader) {
@@ -1239,7 +1258,7 @@ function updateNotificationSettingsUi() {
 }
 
 async function saveNotificationPreference(enabled) {
-    const response = await fetch('/settings/notifications', {
+    const response = await fetch(notificationsUpdateUrl, {
         method: 'PATCH',
         headers: { 'X-CSRF-TOKEN': csrf, Accept: 'application/json', 'Content-Type': 'application/json' },
         body: JSON.stringify({ enabled }),
@@ -1282,8 +1301,8 @@ testNotificationButton?.addEventListener('click', () => {
     if (Notification.permission !== 'granted') return updateNotificationSettingsUi();
     const notification = new Notification('U-Mail notifications are ready', {
         body: 'New inbox messages will show the sender and subject here.',
-        icon: '/images/utica-jendouba-logo.png',
-        badge: '/favicon.png',
+        icon: notificationIconUrl,
+        badge: notificationBadgeUrl,
         tag: 'u-mail-test-notification',
     });
     notification.onclick = () => {
@@ -1361,7 +1380,7 @@ async function saveInlineDraft() {
     draftData.append('body_html', inlineEditor.innerHTML);
     inlineDraftStatus.textContent = 'Saving draft...';
     try {
-        const response = await fetch('/messages/draft', { method: 'POST', headers: { 'X-CSRF-TOKEN': csrf, Accept: 'application/json' }, body: draftData });
+        const response = await fetch(draftStoreUrl, { method: 'POST', headers: { 'X-CSRF-TOKEN': csrf, Accept: 'application/json' }, body: draftData });
         const result = await response.json();
         if (!response.ok) throw new Error(result.message || 'Unable to save');
         document.getElementById('inlineDraftId').value = result.id;
@@ -1380,7 +1399,7 @@ document.querySelectorAll('[data-close-inline-reply]').forEach(button => button.
 document.querySelector('[data-discard-inline]')?.addEventListener('click', async () => {
     const draftId = document.getElementById('inlineDraftId').value;
     if (draftId) {
-        await fetch(`/messages/${draftId}/draft`, { method: 'DELETE', headers: { 'X-CSRF-TOKEN': csrf, Accept: 'application/json' } });
+        await fetch(urlWithMessageId(draftDeleteUrl, draftId), { method: 'DELETE', headers: { 'X-CSRF-TOKEN': csrf, Accept: 'application/json' } });
     }
     inlineReplyDirty = false;
     inlineReplyCard.hidden = true;
@@ -1396,7 +1415,7 @@ function setupRecipientSuggestions(input, container, onSelect) {
             return;
         }
         timer = setTimeout(async () => {
-            const users = await fetch(`/directory?q=${encodeURIComponent(query)}`, { headers: { Accept: 'application/json' } }).then(response => response.json());
+            const users = await fetch(directorySearchUrl(query), { headers: { Accept: 'application/json' } }).then(response => response.json());
             container.innerHTML = '';
             users.forEach(user => {
                 const suggestion = document.createElement('button');

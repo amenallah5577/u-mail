@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Reset password - U-Mail</title><link rel="icon" type="image/png" href="/favicon.png">@vite(['resources/css/app.css'])
+    <title>Reset password - U-Mail</title><link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">@vite(['resources/css/app.css'])
 </head>
 <body class="auth-page">
 <main class="auth-shell compact">
     <section class="auth-visual">
-        <div class="auth-brand"><img class="auth-logo" src="/images/utica-jendouba-logo.png" alt="UTICA Jendouba"><span><strong>UTICA</strong><small>Jendouba</small></span></div>
+        <div class="auth-brand"><img class="auth-logo" src="{{ asset('images/utica-jendouba-logo.png') }}" alt="UTICA Jendouba"><span><strong>UTICA</strong><small>Jendouba</small></span></div>
         <div class="auth-copy"><p class="eyebrow">SECURE PASSWORD RESET</p><h1>Recover access.<br><em>Keep mail protected.</em></h1><p>Request a private reset code, then use it once to choose a new password.</p></div>
         <div class="auth-foot"><span></span> U-Mail password reset</div>
     </section>

@@ -16,17 +16,17 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>@yield('title', 'Mailbox') - U-Mail</title>
-    <link rel="icon" type="image/png" href="/favicon.png">
-    <script src="/js/history-guard.js"></script>
-    <script src="/js/sidebar-preload.js"></script>
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
+    <script src="{{ asset('js/history-guard.js') }}"></script>
+    <script src="{{ asset('js/sidebar-preload.js') }}"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body data-user-id="{{ auth()->id() }}" data-login-url="{{ auth()->user()->isAdmin() ? route('admin.login') : route('login') }}" data-session-check-url="{{ route('auth.session') }}" data-mail-notifications-enabled="{{ auth()->user()->mail_notifications_enabled ? 'true' : 'false' }}" data-agent-run-url="{{ route('agent.runs.store') }}" data-onboarding-tour-available="{{ $onboardingTourAvailable ? 'true' : 'false' }}" data-onboarding-tour-auto-start="{{ $onboardingTourAutoStart ? 'true' : 'false' }}" data-onboarding-tour-version="{{ $onboardingTourVersion }}" data-onboarding-tour-complete-url="{{ route('tutorial.onboarding.complete') }}">
+<body data-user-id="{{ auth()->id() }}" data-login-url="{{ auth()->user()->isAdmin() ? route('admin.login') : route('login') }}" data-session-check-url="{{ route('auth.session') }}" data-mail-notifications-enabled="{{ auth()->user()->mail_notifications_enabled ? 'true' : 'false' }}" data-agent-run-url="{{ route('agent.runs.store') }}" data-onboarding-tour-available="{{ $onboardingTourAvailable ? 'true' : 'false' }}" data-onboarding-tour-auto-start="{{ $onboardingTourAutoStart ? 'true' : 'false' }}" data-onboarding-tour-version="{{ $onboardingTourVersion }}" data-onboarding-tour-complete-url="{{ route('tutorial.onboarding.complete') }}" data-draft-store-url="{{ route('messages.draft') }}" data-draft-show-url="{{ route('messages.draft.show', ['message' => '__MESSAGE__']) }}" data-draft-delete-url="{{ route('messages.discard', ['message' => '__MESSAGE__']) }}" data-directory-url="{{ route('directory') }}" data-poll-url="{{ route('poll') }}" data-notifications-update-url="{{ route('notifications.update') }}" data-notification-icon-url="{{ asset('images/utica-jendouba-logo.png') }}" data-notification-badge-url="{{ asset('favicon.png') }}">
 <div class="app-shell">
     <aside class="sidebar {{ auth()->user()->isOwner() ? 'owner-sidebar' : '' }}" id="sidebar">
         <div class="sidebar-brand-row">
             <a class="brand" href="{{ route('mailbox') }}">
-                <img class="brand-logo" src="/images/utica-jendouba-logo.png" alt="UTICA">
+                <img class="brand-logo" src="{{ asset('images/utica-jendouba-logo.png') }}" alt="UTICA">
                 <span><strong>U-Mail</strong><small>Jendouba workspace</small></span>
             </a>
             <button class="sidebar-collapse-button" type="button" data-sidebar-collapse aria-label="Reduce sidebar" title="Reduce sidebar"><x-icon name="sidebar" /></button>
@@ -211,7 +211,7 @@
         <input type="hidden" name="thread_id" id="threadId">
         <input type="hidden" name="parent_id" id="parentId">
         <div class="compose-head">
-            <span><img src="/images/utica-jendouba-logo.png" alt=""><span><strong>New message</strong><small>U-Mail · UTICA Jendouba</small></span></span>
+            <span><img src="{{ asset('images/utica-jendouba-logo.png') }}" alt=""><span><strong>New message</strong><small>U-Mail · UTICA Jendouba</small></span></span>
             <button type="button" data-close-compose aria-label="Close composer"><x-icon name="close" /></button>
         </div>
         <div class="compose-workspace">
@@ -290,7 +290,7 @@
     <div class="confirm-dialog-accent"></div>
     <div class="confirm-dialog-content">
         <div class="confirm-dialog-brand">
-            <img src="/images/utica-jendouba-logo.png" alt="">
+            <img src="{{ asset('images/utica-jendouba-logo.png') }}" alt="">
             <span><strong>U-Mail</strong><small>Confirm action</small></span>
         </div>
         <div class="confirm-dialog-copy">
@@ -315,7 +315,7 @@
         <div class="onboarding-tour-spotlight" data-onboarding-spotlight></div>
         <section class="onboarding-tour-card" data-onboarding-card role="dialog" aria-modal="true" aria-labelledby="onboardingTourTitle" aria-describedby="onboardingTourBody">
             <div class="onboarding-tour-bot">
-                <img src="/images/utica-jendouba-logo.png" alt="">
+                <img src="{{ asset('images/utica-jendouba-logo.png') }}" alt="">
                 <span><strong>U-Mail guide</strong><small data-onboarding-progress>Step 1 of 7</small></span>
             </div>
             <h2 id="onboardingTourTitle" data-onboarding-title>Welcome to U-Mail</h2>
