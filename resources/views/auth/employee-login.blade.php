@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Employee Sign In - U-Mail</title>
-    <link rel="icon" type="image/png" href="/favicon.png">
-    <script src="/js/auth-entry.js"></script>
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
+    <script src="{{ asset('js/auth-entry.js') }}"></script>
     @vite(['resources/css/app.css'])
 </head>
 <body class="auth-page employee-auth">
 <main class="auth-shell">
     <section class="auth-visual">
-        <div class="auth-brand"><img class="auth-logo" src="/images/utica-jendouba-logo.png" alt="UTICA Jendouba"><span><strong>UTICA</strong><small>Jendouba</small></span></div>
+        <div class="auth-brand"><img class="auth-logo" src="{{ asset('images/utica-jendouba-logo.png') }}" alt="UTICA Jendouba"><span><strong>UTICA</strong><small>Jendouba</small></span></div>
         <div class="auth-copy">
             <p class="eyebrow">EMPLOYEE MAIL WORKSPACE</p>
             <h1>Work connected.<br><em>Mail protected.</em></h1>

@@ -35,7 +35,7 @@
             <p class="eyebrow">PRIVACY</p>
             <h2>What alerts show</h2>
             <div class="notification-preview">
-                <img src="/images/utica-jendouba-logo.png" alt="">
+                <img src="{{ asset('images/utica-jendouba-logo.png') }}" alt="">
                 <span><strong>New mail from UTICA Employee</strong><small>Example message subject</small></span>
             </div>
             <p>Alerts never include message text, recipients, attachments, contact email addresses, or BCC details.</p>

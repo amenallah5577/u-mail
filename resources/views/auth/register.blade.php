@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Request an account - U-Mail</title><link rel="icon" type="image/png" href="/favicon.png">@vite(['resources/css/app.css'])
+    <title>Request an account - U-Mail</title><link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">@vite(['resources/css/app.css'])
 </head>
 <body class="auth-page employee-auth">
 <main class="auth-shell">
     <section class="auth-visual">
-        <div class="auth-brand"><img class="auth-logo" src="/images/utica-jendouba-logo.png" alt="UTICA Jendouba"><span><strong>UTICA</strong><small>Jendouba</small></span></div>
+        <div class="auth-brand"><img class="auth-logo" src="{{ asset('images/utica-jendouba-logo.png') }}" alt="UTICA Jendouba"><span><strong>UTICA</strong><small>Jendouba</small></span></div>
         <div class="auth-copy"><p class="eyebrow">JOIN U-MAIL</p><h1>Request your<br><em>work mailbox.</em></h1><p>Confirm your contact email, then an administrator reviews your request. After approval, your new address and temporary password arrive by email.</p></div>
         <div class="auth-foot"><span></span> Email confirmation required</div>
     </section>

@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Confirm contact email - U-Mail</title><link rel="icon" type="image/png" href="/favicon.png">@vite(['resources/css/app.css'])
+    <title>Confirm contact email - U-Mail</title><link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">@vite(['resources/css/app.css'])
 </head>
 <body class="auth-page employee-auth">
 <main class="auth-shell">
     <section class="auth-visual">
-        <div class="auth-brand"><img class="auth-logo" src="/images/utica-jendouba-logo.png" alt="UTICA Jendouba"><span><strong>UTICA</strong><small>Jendouba</small></span></div>
+        <div class="auth-brand"><img class="auth-logo" src="{{ asset('images/utica-jendouba-logo.png') }}" alt="UTICA Jendouba"><span><strong>UTICA</strong><small>Jendouba</small></span></div>
         <div class="auth-copy"><p class="eyebrow">CONFIRM YOUR EMAIL</p><h1>One quick<br><em>security check.</em></h1><p>Confirm that the contact email belongs to you before your request is sent for approval.</p></div>
         <div class="auth-foot"><span></span> Your code expires in 15 minutes</div>
     </section>

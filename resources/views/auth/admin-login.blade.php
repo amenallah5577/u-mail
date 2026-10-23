@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Restricted Sign In - U-Mail</title>
-    <link rel="icon" type="image/png" href="/favicon.png">
-    <script src="/js/auth-entry.js"></script>
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
+    <script src="{{ asset('js/auth-entry.js') }}"></script>
     @vite(['resources/css/app.css'])
 </head>
 <body class="auth-page admin-auth">
 <main class="admin-auth-shell">
     <header class="admin-auth-header">
-        <a href="{{ route('login') }}" class="auth-brand"><img class="auth-logo" src="/images/utica-jendouba-logo.png" alt="UTICA Jendouba"><span><strong>UTICA</strong><small>Jendouba</small></span></a>
+        <a href="{{ route('login') }}" class="auth-brand"><img class="auth-logo" src="{{ asset('images/utica-jendouba-logo.png') }}" alt="UTICA Jendouba"><span><strong>UTICA</strong><small>Jendouba</small></span></a>
         <a href="{{ route('login') }}" class="portal-switch">Employee portal</a>
     </header>
     <section class="admin-auth-content">

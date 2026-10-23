@@ -9,14 +9,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $event->title }} - U-Mail Invitation</title>
-    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
     @vite(['resources/css/app.css'])
 </head>
 <body class="calendar-invitation-page">
 <main class="calendar-invitation-shell">
     <section class="calendar-invitation-hero">
         <a class="auth-brand" href="{{ route('login') }}">
-            <img class="auth-logo" src="/images/utica-jendouba-logo.png" alt="UTICA Jendouba">
+            <img class="auth-logo" src="{{ asset('images/utica-jendouba-logo.png') }}" alt="UTICA Jendouba">
             <span><strong>U-Mail</strong><small>Invitation</small></span>
         </a>
         <div>

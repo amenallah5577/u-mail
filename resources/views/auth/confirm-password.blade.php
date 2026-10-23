@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Confirm password - U-Mail</title><link rel="icon" type="image/png" href="/favicon.png">@vite(['resources/css/app.css'])
+    <title>Confirm password - U-Mail</title><link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">@vite(['resources/css/app.css'])
 </head>
 <body class="auth-page employee-auth">
 <main class="auth-shell compact">
     <section class="auth-visual">
-        <div class="auth-brand"><img class="auth-logo" src="/images/utica-jendouba-logo.png" alt="UTICA Jendouba"><span><strong>U-Mail</strong><small>Security confirmation</small></span></div>
+        <div class="auth-brand"><img class="auth-logo" src="{{ asset('images/utica-jendouba-logo.png') }}" alt="UTICA Jendouba"><span><strong>U-Mail</strong><small>Security confirmation</small></span></div>
         <div class="auth-copy"><p class="eyebrow">SENSITIVE ACTION</p><h1>Confirm identity.<br><em>Continue securely.</em></h1><p>Your confirmation remains valid for five minutes.</p></div>
         <div class="auth-foot"><span></span> Password confirmation</div>
     </section>

@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Activate account - U-Mail</title><link rel="icon" type="image/png" href="/favicon.png">@vite(['resources/css/app.css'])
+    <title>Activate account - U-Mail</title><link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">@vite(['resources/css/app.css'])
 </head>
 <body class="auth-page">
 <main class="auth-shell compact">
     <section class="auth-visual">
-        <div class="auth-brand"><img class="auth-logo" src="/images/utica-jendouba-logo.png" alt="UTICA Jendouba"><span><strong>UTICA</strong><small>Jendouba</small></span></div>
+        <div class="auth-brand"><img class="auth-logo" src="{{ asset('images/utica-jendouba-logo.png') }}" alt="UTICA Jendouba"><span><strong>UTICA</strong><small>Jendouba</small></span></div>
         <div class="auth-copy"><p class="eyebrow">SECURE ACCOUNT SETUP</p><h1>Activate your<br><em>private workspace.</em></h1><p>Use the six-digit, single-use activation code sent to your private contact email.</p></div>
         <div class="auth-foot"><span></span> Protected employee access</div>
     </section>
