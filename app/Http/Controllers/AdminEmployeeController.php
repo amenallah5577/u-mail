@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Notifications\AccountApprovedNotification;
-use App\Services\AccountCredentialService;
 use App\Services\AccountTokenService;
 use App\Services\MailcowAddressSyncService;
 use App\Services\MfaService;
@@ -121,7 +120,7 @@ class AdminEmployeeController extends Controller
         return back()->with('status', 'U-Mail address updated.');
     }
 
-    public function approve(Request $request, User $user, AccountCredentialService $credentials, MailcowAddressSyncService $mailcow, SecurityAuditService $audit)
+    public function approve(Request $request, User $user, MailcowAddressSyncService $mailcow, SecurityAuditService $audit)
     {
         abort_unless($user->role === 'employee' && $user->status === 'requested', 422, 'Only account requests can be approved.');
         abort_unless($user->email_verified_at && filled($user->email), 422, 'The requester must confirm their contact email before approval.');
@@ -134,7 +133,6 @@ class AdminEmployeeController extends Controller
             'activated_at' => now(),
             'rejected_at' => null,
         ]);
-        $credentials->store($user, $password);
         $mailcow->sync($user);
         $user->notify(new AccountApprovedNotification($password));
         $audit->record('admin.registration_approved', $request->user(), $user, request: $request);

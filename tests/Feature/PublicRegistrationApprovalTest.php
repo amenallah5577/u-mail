@@ -116,7 +116,6 @@ class PublicRegistrationApprovalTest extends TestCase
             return true;
         });
         $this->assertTrue(Hash::check($temporaryPassword, $requester->password));
-        $this->assertSame($temporaryPassword, $requester->credential->password_encrypted);
 
         $this->post('/logout');
         $this->post('/login', ['email' => $requester->public_email, 'password' => $temporaryPassword])

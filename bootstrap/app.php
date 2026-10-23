@@ -41,10 +41,6 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectUsersTo(function (Request $request): string {
             $user = $request->user();
 
-            if ($user?->isOwner()) {
-                return route('owner.credentials');
-            }
-
             if ($user?->isAdmin()) {
                 return route('admin.employees');
             }

@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Models\User;
-use App\Services\AccountCredentialService;
 use App\Services\PublicEmailService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
@@ -14,7 +13,7 @@ class CreateAdmin extends Command
 
     protected $description = 'Create or update the initial active UTICA administrator';
 
-    public function handle(AccountCredentialService $credentials, PublicEmailService $publicEmails): int
+    public function handle(PublicEmailService $publicEmails): int
     {
         $password = $this->option('password') ?: $this->secret('Password');
         if (! $password || strlen($password) < 12 || ! preg_match('/[a-z]/', $password) || ! preg_match('/[A-Z]/', $password) || ! preg_match('/\d/', $password) || ! preg_match('/[^A-Za-z0-9]/', $password)) {
@@ -36,7 +35,6 @@ class CreateAdmin extends Command
                 'activated_at' => now(),
             ],
         );
-        $credentials->store($user, $password);
         $this->info("Administrator ready: {$user->public_email}");
 
         return self::SUCCESS;

@@ -170,7 +170,7 @@ class SecurityUpgradeTest extends TestCase
             ->assertRedirect('/mfa/challenge');
         $this->post('/mfa/challenge/method', ['method' => 'email'])->assertSessionHas('status');
         $ownerCode = Notification::sent($owner, MfaCodeNotification::class)->last()->code;
-        $this->post('/mfa/challenge/verify', ['code' => $ownerCode])->assertRedirect('/owner/credentials');
+        $this->post('/mfa/challenge/verify', ['code' => $ownerCode])->assertRedirect('/admin/employees');
         $this->assertAuthenticatedAs($owner);
     }
 
@@ -357,7 +357,6 @@ class SecurityUpgradeTest extends TestCase
 
         $employee->refresh();
         $this->assertTrue(Hash::check('NewStrongPass123!', $employee->password));
-        $this->assertSame('NewStrongPass123!', $employee->credential->password_encrypted);
         $this->assertDatabaseMissing('sessions', ['id' => 'other-device-session']);
         $this->assertDatabaseHas('security_events', [
             'event' => 'password.changed',

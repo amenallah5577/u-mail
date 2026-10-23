@@ -54,7 +54,16 @@ class AccountTokenService
             throw ValidationException::withMessages(['code' => 'The one-time code is invalid or has expired.']);
         }
 
-        $token->update(['used_at' => now()]);
+        // Atomically claim the code so overlapping requests cannot reuse it.
+        $claimed = AccountToken::whereKey($token->id)
+            ->whereNull('used_at')
+            ->where('expires_at', '>', now())
+            ->where('failed_attempts', '<', 5)
+            ->update(['used_at' => now()]);
+
+        if ($claimed !== 1) {
+            throw ValidationException::withMessages(['code' => 'The one-time code is invalid or has expired.']);
+        }
     }
 
     private function codeMatches(string $storedHash, string $code): bool

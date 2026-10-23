@@ -129,10 +129,6 @@ class AuthController extends Controller
 
     private function destinationForAdmin(User $user): string
     {
-        if ($user->isOwner()) {
-            return route('owner.credentials');
-        }
-
         return route('admin.employees');
     }
 
